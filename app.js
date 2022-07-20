@@ -30,20 +30,35 @@ const item3 = new item({
   name : "<-- hit this to delete an item"
 });
 
-const defaultitems = [item1,item2,item3];
+ const defaultitems = [item1,item2,item3];
 
-item.insertMany(defaultitems,function(err){
-  if(err)
-    console.log(err);
-  else
-    console.log("run success");
-});
+// item.insertMany(defaultitems,function(err){
+//   if(err)
+//     console.log(err);
+//   else
+//     console.log("run success");
+// });
 
 app.get("/", function(req, res) {
 
-const day = date.getDate();
+item.find({},function(err,founditems){
 
-  res.render("list", {listTitle: "Today", newListItems: items});
+  if(founditems.length === 0){
+      item.insertMany(defaultitems,function(err){
+      if(err)
+        console.log(err);
+      else
+        console.log("run success");
+    });
+    res.redirect("/");
+  }
+  else{
+    res.render("list", {listTitle: "Today", newListItems: founditems});
+  }
+  
+});
+
+  
 
 });
 
